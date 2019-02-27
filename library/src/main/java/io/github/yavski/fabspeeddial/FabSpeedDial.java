@@ -213,7 +213,9 @@ public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
         }
 
         final int fabCloseDrawableResId = typedArray.getResourceId(R.styleable.FabSpeedDial_fabCloseDrawable, 0);
-        fabCloseDrawable = ContextCompat.getDrawable(getContext(), fabCloseDrawableResId);
+        if (fabCloseDrawableResId != 0) {
+            fabCloseDrawable = ContextCompat.getDrawable(getContext(), fabCloseDrawableResId);
+        }
 
         if (fabCloseDrawable == null) {
             fabCloseDrawable = ContextCompat.getDrawable(getContext(), R.drawable.fab_add_clear_selector);
@@ -435,7 +437,9 @@ public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
             newNavigationMenu();
             showMenu = menuListener.onPrepareMenu(navigationMenu);
         }
-        fab.setImageDrawable(fabCloseDrawable);
+        if (fabCloseDrawable != null) {
+            fab.setImageDrawable(fabCloseDrawable);
+        }
         fab.setBackgroundTintList(fabCloseBackgroundTint);
 
         if (showMenu) {
@@ -465,7 +469,9 @@ public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
         if (isMenuOpen()) {
             fab.setSelected(false);
             removeFabMenuItems();
-            fab.setImageDrawable(fabDrawable);
+            if (fabCloseDrawable != null) {
+                fab.setImageDrawable(fabDrawable);
+            }
             fab.setBackgroundTintList(fabBackgroundTint);
             if (menuListener != null) {
                 menuListener.onMenuClosed();
