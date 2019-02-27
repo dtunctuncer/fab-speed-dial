@@ -25,6 +25,9 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
 import android.support.design.internal.NavigationMenu;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -40,6 +43,7 @@ import android.text.TextUtils;
 import android.util.AndroidRuntimeException;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -52,7 +56,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import io.github.yavski.fabmenu.R;
@@ -106,6 +113,7 @@ public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
     private NavigationMenu navigationMenu;
     private Map<FloatingActionButton, MenuItem> fabMenuItemMap;
     private Map<CardView, MenuItem> cardViewMenuItemMap;
+    private SparseArray<SimpleMenuItem> customMenuArray = new SparseArray<>();
 
     private LinearLayout menuItemsLayout;
     FloatingActionButton fab;
@@ -114,10 +122,12 @@ public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
     private int menuId;
     private int fabGravity;
     private Drawable fabDrawable;
+    private Drawable fabCloseDrawable;
     private ColorStateList fabDrawableTint;
     private ColorStateList fabBackgroundTint;
     private ColorStateList miniFabDrawableTint;
     private ColorStateList miniFabBackgroundTint;
+    private ColorStateList fabCloseBackgroundTint;
     private int[] miniFabBackgroundTintArray;
     private ColorStateList miniFabTitleBackgroundTint;
     private boolean miniFabTitlesEnabled;
@@ -200,6 +210,19 @@ public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
 
         if (typedArray.hasValue(R.styleable.FabSpeedDial_fabBackgroundTint)) {
             fabBackgroundTint = typedArray.getColorStateList(R.styleable.FabSpeedDial_fabBackgroundTint);
+        }
+
+        final int fabCloseDrawableResId = typedArray.getResourceId(R.styleable.FabSpeedDial_fabCloseDrawable, 0);
+        fabCloseDrawable = ContextCompat.getDrawable(getContext(), fabCloseDrawableResId);
+
+        if (fabCloseDrawable == null) {
+            fabCloseDrawable = ContextCompat.getDrawable(getContext(), R.drawable.fab_add_clear_selector);
+        }
+
+        if (typedArray.hasValue(R.styleable.FabSpeedDial_fabCloseBackgroundTint)) {
+            fabCloseBackgroundTint = typedArray.getColorStateList(R.styleable.FabSpeedDial_fabCloseBackgroundTint);
+        } else {
+            fabCloseBackgroundTint = ContextCompat.getColorStateList(getContext(), R.color.fab_background_tint);
         }
 
         miniFabBackgroundTint = typedArray.getColorStateList(R.styleable.FabSpeedDial_miniFabBackgroundTint);
@@ -332,7 +355,6 @@ public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
     private void newNavigationMenu() {
         navigationMenu = new NavigationMenu(getContext());
         new SupportMenuInflater(getContext()).inflate(menuId, navigationMenu);
-
         navigationMenu.setCallback(new MenuBuilder.Callback() {
             @Override
             public boolean onMenuItemSelected(MenuBuilder menu, MenuItem item) {
@@ -343,6 +365,15 @@ public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
             public void onMenuModeChange(MenuBuilder menu) {
             }
         });
+
+        for (int i = 0; i < customMenuArray.size(); i++) {
+            final int key = customMenuArray.keyAt(i);
+            SimpleMenuItem simpleMenuItem = customMenuArray.get(key);
+            final MenuItem menuItem = navigationMenu.add(simpleMenuItem.getGroup(), simpleMenuItem.getId(), simpleMenuItem.getCategoryOrder(), simpleMenuItem.getTitle());
+            menuItem.setIcon(simpleMenuItem.getDrawable());
+        }
+
+
     }
 
     @Override
@@ -404,12 +435,26 @@ public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
             newNavigationMenu();
             showMenu = menuListener.onPrepareMenu(navigationMenu);
         }
+        fab.setImageDrawable(fabCloseDrawable);
+        fab.setBackgroundTintList(fabCloseBackgroundTint);
 
         if (showMenu) {
             addMenuItems();
             fab.setSelected(true);
         } else {
             fab.setSelected(false);
+        }
+    }
+
+    public void addMenuItem(int group, @IdRes int id, int categoryOrder, @NonNull String title, @DrawableRes int drawable) {
+        if (customMenuArray.get(id) == null) {
+            final SimpleMenuItem simpleMenuItem = new SimpleMenuItem();
+            simpleMenuItem.setId(id);
+            simpleMenuItem.setGroup(group);
+            simpleMenuItem.setCategoryOrder(categoryOrder);
+            simpleMenuItem.setTitle(title);
+            simpleMenuItem.setDrawable(drawable);
+            customMenuArray.put(id, simpleMenuItem);
         }
     }
 
@@ -420,6 +465,8 @@ public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
         if (isMenuOpen()) {
             fab.setSelected(false);
             removeFabMenuItems();
+            fab.setImageDrawable(fabDrawable);
+            fab.setBackgroundTintList(fabBackgroundTint);
             if (menuListener != null) {
                 menuListener.onMenuClosed();
             }
@@ -445,8 +492,13 @@ public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
 
     private void addMenuItems() {
         ViewCompat.setAlpha(menuItemsLayout, 1f);
+        final List<MenuItem> menuItems = new ArrayList<>();
         for (int i = 0; i < navigationMenu.size(); i++) {
             MenuItem menuItem = navigationMenu.getItem(i);
+            menuItems.add(menuItem.getOrder(), menuItem);
+        }
+        Collections.reverse(menuItems);
+        for (MenuItem menuItem : menuItems) {
             if (menuItem.isVisible()) {
                 menuItemsLayout.addView(createFabMenuItem(menuItem));
             }

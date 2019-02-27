@@ -15,27 +15,32 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/MiniFabLayout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
+    <TextView
+        android:id="@+id/title_view"
+        style="@style/TitleView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <android.support.v7.widget.CardView
         android:id="@+id/card_view"
         style="@style/TitleCardView"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/title_view"
-            style="@style/TitleView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+
 
     </android.support.v7.widget.CardView>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/mini_fab"
         style="@style/MiniFab"
+        app:fabSize="normal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

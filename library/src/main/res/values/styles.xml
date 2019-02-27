@@ -26,7 +26,7 @@
         <item name="android:layout_gravity">center</item>
         <item name="android:layout_marginBottom">@dimen/mini_fab_margin_bottom</item>
         <item name="android:layout_marginLeft">@dimen/mini_fab_margin_left</item>
-        <item name="android:layout_marginRight">@dimen/mini_fab_margin_right</item>
+        <item name="android:layout_marginRight">2dp</item>
         <item name="android:layout_marginTop">@dimen/mini_fab_margin_top</item>
         <item name="fabSize">mini</item>
         <item name="paddingEnd">0dp</item>

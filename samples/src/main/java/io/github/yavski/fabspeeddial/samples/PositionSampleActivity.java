@@ -17,9 +17,13 @@
 package io.github.yavski.fabspeeddial.samples;
 
 import android.os.Bundle;
+import android.support.design.internal.NavigationMenu;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import io.github.yavski.fabmenu.samples.R;
+import io.github.yavski.fabspeeddial.FabSpeedDial;
 
 public class PositionSampleActivity extends BaseSampleActivity {
 
@@ -28,6 +32,29 @@ public class PositionSampleActivity extends BaseSampleActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_position_sample);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        FabSpeedDial fabSpeedDial = findViewById(R.id.position_bottom_end);
+        fabSpeedDial.setMenuListener(new FabSpeedDial.MenuListener() {
+            @Override
+            public boolean onPrepareMenu(NavigationMenu navigationMenu) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemSelected(MenuItem menuItem) {
+                if (menuItem.getItemId() == R.id.test)
+                    Toast.makeText(PositionSampleActivity.this, "test", Toast.LENGTH_SHORT).show();
+
+
+                return true;
+            }
+
+            @Override
+            public void onMenuClosed() {
+
+            }
+        });
+
+        fabSpeedDial.addMenuItem(0, R.id.test, 3, "test", R.drawable.ic_mail_outline_white_24px);
         setSupportActionBar(toolbar);
     }
 
