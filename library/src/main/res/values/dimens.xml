@@ -17,7 +17,7 @@
 
 <resources>
     <dimen name="keyline_1">16dp</dimen>
-    <dimen name="keyline_1_minus_8dp">8dp</dimen>
+    <dimen name="keyline_1_minus_8dp">20dp</dimen>
 
     <!-- Needed as the impl of CardView in pre-Lollipop unnecessarily adds 16 dp to the top and bottom -->
     <dimen name="fab_menu_item_margin_top">-16dp</dimen>

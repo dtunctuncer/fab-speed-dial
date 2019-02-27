@@ -16,15 +16,33 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/MiniFabLayout"
+    android:gravity="center_vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/title_view"
         style="@style/TitleView"
+        android:textColor="#4a4a4a"
+        tools:text="Add an Order"
+        android:textSize="18sp"
+        android:gravity="end"
+        android:layout_marginEnd="22dp"
+        android:layout_width="wrap_content"
+        android:fontFamily="sans-serif"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="22dp" />
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/mini_fab"
+        style="@style/MiniFab"
+        app:fabSize="normal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
 
     <android.support.v7.widget.CardView
         android:id="@+id/card_view"
@@ -36,12 +54,5 @@
 
 
     </android.support.v7.widget.CardView>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/mini_fab"
-        style="@style/MiniFab"
-        app:fabSize="normal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
 </LinearLayout>

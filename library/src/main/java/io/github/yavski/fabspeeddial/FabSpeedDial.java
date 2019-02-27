@@ -378,6 +378,7 @@ public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
     public void onClick(View v) {
         fab.setSelected(false);
         removeFabMenuItems();
+        fab.setBackgroundTintList(fabBackgroundTint);
 
         if (menuListener != null) {
             if (v == this || v == touchGuard) {
