@@ -28,6 +28,7 @@ import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.internal.NavigationMenu;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -114,6 +115,7 @@ public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
     private Map<FloatingActionButton, MenuItem> fabMenuItemMap;
     private Map<CardView, MenuItem> cardViewMenuItemMap;
     private SparseArray<SimpleMenuItem> customMenuArray = new SparseArray<>();
+    private SparseArray<View> menuViewArray = new SparseArray<>();
 
     private LinearLayout menuItemsLayout;
     FloatingActionButton fab;
@@ -393,6 +395,7 @@ public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
         }
     }
 
+
     @Override
     protected Parcelable onSaveInstanceState() {
         Parcelable superState = super.onSaveInstanceState();
@@ -493,6 +496,11 @@ public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
         fab.hide();
     }
 
+    @Nullable
+    public View getMenuItemView(@IdRes int id) {
+        return menuViewArray.get(id);
+    }
+
     private void addMenuItems() {
         ViewCompat.setAlpha(menuItemsLayout, 1f);
         final List<MenuItem> menuItems = new ArrayList<>();
@@ -503,7 +511,9 @@ public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
         Collections.reverse(menuItems);
         for (MenuItem menuItem : menuItems) {
             if (menuItem.isVisible()) {
-                menuItemsLayout.addView(createFabMenuItem(menuItem));
+                final View view = createFabMenuItem(menuItem);
+                menuViewArray.put(menuItem.getItemId(), view);
+                menuItemsLayout.addView(view);
             }
         }
         animateFabMenuItemsIn();
