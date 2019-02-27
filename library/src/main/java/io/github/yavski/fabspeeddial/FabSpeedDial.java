@@ -217,10 +217,6 @@ public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
             fabCloseDrawable = ContextCompat.getDrawable(getContext(), fabCloseDrawableResId);
         }
 
-        if (fabCloseDrawable == null) {
-            fabCloseDrawable = ContextCompat.getDrawable(getContext(), R.drawable.fab_add_clear_selector);
-        }
-
         if (typedArray.hasValue(R.styleable.FabSpeedDial_fabCloseBackgroundTint)) {
             fabCloseBackgroundTint = typedArray.getColorStateList(R.styleable.FabSpeedDial_fabCloseBackgroundTint);
         } else {
